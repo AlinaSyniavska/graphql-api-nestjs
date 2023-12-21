@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Movie {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  description String?  @default("No description")
+
+  updatedAt DateTime @default(now())
+  title     String?
+
+  MovieComment MovieComment[] // in what models we use Movie model (id field)
+}
+
+model MovieComment {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  description String?  @default("") // some description to a movie
+  likes       Int // how many people liked the movie
+
+  // movie which was commented - cascade on delete
+  movieId Int
+  Movie   Movie? @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  // user who created a comment
+  userId Int
+  User   User? @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  description String?  @default("")
+  username    String
+
+  MovieComment MovieComment[]
+}
