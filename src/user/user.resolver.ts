@@ -10,6 +10,7 @@ import {
 import { UserService } from './user.service';
 import { MovieCommentService } from '../movie-comment/movie-comment.service';
 import { User } from './user.model';
+import { MovieComment } from '../movie-comment/movie-comment.model';
 
 @Resolver(() => User)
 export class UserResolver {
