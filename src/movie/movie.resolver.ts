@@ -11,12 +11,14 @@ import {
 import { MovieInputCreate } from './movie.input';
 import { Movie } from './movie.model';
 import { MovieService } from './movie.service';
+import { MovieCommentService } from '../movie-comment/movie-comment.service';
+import { MovieComment } from '../movie-comment/movie-comment.model';
 
 @Resolver(() => Movie)
 export class MovieResolver {
   constructor(
     private movieService: MovieService,
-    // private movieCommentService: MovieCommentService,
+    private movieCommentService: MovieCommentService,
   ) {}
 
   @Query(() => [Movie])
@@ -38,10 +40,9 @@ export class MovieResolver {
     return this.movieService.createMovie(movieInputCreate);
   }
 
-  @ResolveField('movieComment', () => [String])
+  @ResolveField('movieComment', () => [MovieComment])
   async getMovieComment(@Parent() movie: Movie) {
-    // call a service to get comments for specific movie, i.e:
-    // this.movieCommentService.getAllMovieCommetsByMovieId(id)
-    return ['Test1', 'Test2'];
+    const { id } = movie;
+    return this.movieCommentService.getAllMovieCommentsByMovieId(id);
   }
 }

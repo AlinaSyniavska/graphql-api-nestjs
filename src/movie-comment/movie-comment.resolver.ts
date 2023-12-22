@@ -21,9 +21,8 @@ export class MovieCommentResolver {
 
   @Mutation(() => MovieComment)
   async createMovieComment(
-    @Args() movieCommentInput: MovieCommentInput,
+    @Args('movieCommentInput') movieCommentInput: MovieCommentInput,
   ): Promise<MovieComment> {
-    // @Args('movieCommentInput') movieCommentInput: MovieCommentInput): Promise<MovieComment> {
     return this.movieCommentService.createMovieComment(movieCommentInput);
   }
 
