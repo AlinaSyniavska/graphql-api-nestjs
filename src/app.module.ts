@@ -3,6 +3,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import { MovieModule } from './movie/movie.module';
+import { UserModule } from './user/user.module';
+import { MovieCommentModule } from './movie-comment/movie-comment.module';
 
 @Module({
   imports: [
@@ -13,6 +15,8 @@ import { MovieModule } from './movie/movie.module';
       autoSchemaFile: true,
     }),
     MovieModule,
+    UserModule,
+    MovieCommentModule,
   ],
   controllers: [],
   providers: [],

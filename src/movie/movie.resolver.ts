@@ -7,6 +7,7 @@ import {
   ResolveField,
   Resolver,
 } from '@nestjs/graphql';
+
 import { MovieInputCreate } from './movie.input';
 import { Movie } from './movie.model';
 import { MovieService } from './movie.service';
