@@ -1,7 +1,7 @@
 import { User as UserClient } from '@prisma/client';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
-@ObjectType()
+@ObjectType({ description: 'User model' })
 export class User implements UserClient {
   @Field(() => Int)
   id: number;
