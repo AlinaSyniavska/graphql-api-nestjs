@@ -1,14 +1,23 @@
-import { gql } from '@apollo/client';
+'use client'
+
+import { gql, useQuery } from '@apollo/client';
 
 export default function Home() {
 
-  const exampleQuery = gql`
-  query AnExample($id: Int!) {
-    example(id: $id) {
-      name
-    }
+  const allMoviesQuery = gql`
+  query Movies {
+    getAllMovies {
+      title
+      description
+   }
   }
-`
+  `;
+
+  const { data, error } = useQuery(allMoviesQuery);
+
+  console.log('**********');
+  console.log(error?.message);
+  console.log('**********');
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -23,7 +32,8 @@ export default function Home() {
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
             Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
+            <span
+              className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
           </h2>
@@ -34,4 +44,4 @@ export default function Home() {
       </div>
     </main>
   );
-}
+};

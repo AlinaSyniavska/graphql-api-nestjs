@@ -23,7 +23,14 @@ export class MovieResolver {
 
   @Query(() => [Movie])
   async getAllMovies(): Promise<Movie[]> {
-    return this.movieService.getAllMovies();
+    const data = this.movieService.getAllMovies();
+
+    console.log('1---------');
+    console.log(data);
+    console.log('1---------');
+
+    return data;
+    // return this.movieService.getAllMovies();
   }
 
   @Query(() => Movie)
