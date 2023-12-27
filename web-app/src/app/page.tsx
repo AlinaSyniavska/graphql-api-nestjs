@@ -1,6 +1,7 @@
 'use client'
 
 import { gql, useQuery } from '@apollo/client';
+import { MoviesQuery } from '@/gql/graphql';
 
 export default function Home() {
 
@@ -13,11 +14,12 @@ export default function Home() {
   }
   `;
 
-  const { data, error } = useQuery(allMoviesQuery);
+  const { data, error } = useQuery<MoviesQuery>(allMoviesQuery);
 
-  console.log('**********');
-  console.log(error?.message);
-  console.log('**********');
+  console.log('1 **********');
+  console.log(data);
+  console.log('2 **********');
+  console.log(error);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
