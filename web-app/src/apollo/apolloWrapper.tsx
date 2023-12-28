@@ -29,6 +29,8 @@ function makeClient() {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Credentials': 'true',
     },
+    credentials: 'include',
+    fetch
   });
 
   return new NextSSRApolloClient({
