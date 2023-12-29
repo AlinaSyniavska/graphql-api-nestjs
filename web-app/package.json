@@ -7,12 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen": "graphql-codegen --config codegen.yml",
-    "codegen-old": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
-    "@apollo/experimental-nextjs-app-support": "^0.5.2",
     "graphql": "^16.8.1",
     "next": "14.0.4",
     "next-with-apollo": "^5.3.0",
@@ -22,7 +20,6 @@
   "devDependencies": {
     "@graphql-codegen/add": "^5.0.0",
     "@graphql-codegen/cli": "5.0.0",
-    "@graphql-codegen/client-preset": "^4.1.0",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@graphql-codegen/typescript-react-apollo": "^4.1.0",
     "@types/node": "^20",
