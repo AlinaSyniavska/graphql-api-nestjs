@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import withApollo from '../../../lib/withApollo';
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import { useCharacterQuery } from '../../../generated';
+import { useCharacterQuery } from '../../../generated/index-old-rickandmortyapi';
 import React from 'react';
 import { Card, CardBody } from '@nextui-org/card';
 import { NextUIProvider } from '@nextui-org/react';

@@ -17,317 +17,192 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  Upload: { input: any; output: any; }
 };
 
-export enum CacheControlScope {
-  Private = 'PRIVATE',
-  Public = 'PUBLIC'
-}
-
-export type Character = {
-  __typename?: 'Character';
-  /** Time at which the character was created in the database. */
-  created?: Maybe<Scalars['String']['output']>;
-  /** Episodes in which this character appeared. */
-  episode: Array<Maybe<Episode>>;
-  /** The gender of the character ('Female', 'Male', 'Genderless' or 'unknown'). */
-  gender?: Maybe<Scalars['String']['output']>;
-  /** The id of the character. */
-  id?: Maybe<Scalars['ID']['output']>;
-  /**
-   * Link to the character's image.
-   * All images are 300x300px and most are medium shots or portraits since they are intended to be used as avatars.
-   */
-  image?: Maybe<Scalars['String']['output']>;
-  /** The character's last known location */
-  location?: Maybe<Location>;
-  /** The name of the character. */
-  name?: Maybe<Scalars['String']['output']>;
-  /** The character's origin location */
-  origin?: Maybe<Location>;
-  /** The species of the character. */
-  species?: Maybe<Scalars['String']['output']>;
-  /** The status of the character ('Alive', 'Dead' or 'unknown'). */
-  status?: Maybe<Scalars['String']['output']>;
-  /** The type or subspecies of the character. */
-  type?: Maybe<Scalars['String']['output']>;
+/** Movie model */
+export type Movie = {
+  __typename?: 'Movie';
+  createdAt: Scalars['String']['output'];
+  /** User's description to the movie */
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  movieComment: Array<MovieComment>;
+  /** User's title to the movie */
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['String']['output'];
 };
 
-export type Characters = {
-  __typename?: 'Characters';
-  info?: Maybe<Info>;
-  results?: Maybe<Array<Maybe<Character>>>;
+export type MovieComment = {
+  __typename?: 'MovieComment';
+  createdAt: Scalars['String']['output'];
+  /** Comment that was added */
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  /** How many likes a Movie has */
+  likes: Scalars['Float']['output'];
+  movieId: Scalars['Float']['output'];
+  user: User;
+  userId: Scalars['Float']['output'];
 };
 
-export type Episode = {
-  __typename?: 'Episode';
-  /** The air date of the episode. */
-  air_date?: Maybe<Scalars['String']['output']>;
-  /** List of characters who have been seen in the episode. */
-  characters: Array<Maybe<Character>>;
-  /** Time at which the episode was created in the database. */
-  created?: Maybe<Scalars['String']['output']>;
-  /** The code of the episode. */
-  episode?: Maybe<Scalars['String']['output']>;
-  /** The id of the episode. */
-  id?: Maybe<Scalars['ID']['output']>;
-  /** The name of the episode. */
-  name?: Maybe<Scalars['String']['output']>;
+export type MovieCommentInput = {
+  /** User's description */
+  description: Scalars['String']['input'];
+  /** Movie which was commented */
+  movieId: Scalars['Float']['input'];
+  /** User who wrote the comment */
+  userId: Scalars['Float']['input'];
 };
 
-export type Episodes = {
-  __typename?: 'Episodes';
-  info?: Maybe<Info>;
-  results?: Maybe<Array<Maybe<Episode>>>;
+export type MovieInputCreate = {
+  /** User's description to the movie */
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** User's title to the movie */
+  title: Scalars['String']['input'];
 };
 
-export type FilterCharacter = {
-  gender?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  species?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<Scalars['String']['input']>;
+export type Mutation = {
+  __typename?: 'Mutation';
+  createMovie: Movie;
+  createMovieComment: MovieComment;
 };
 
-export type FilterEpisode = {
-  episode?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
+
+export type MutationCreateMovieArgs = {
+  movieInputCreate: MovieInputCreate;
 };
 
-export type FilterLocation = {
-  dimension?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<Scalars['String']['input']>;
-};
 
-export type Info = {
-  __typename?: 'Info';
-  /** The length of the response. */
-  count?: Maybe<Scalars['Int']['output']>;
-  /** Number of the next page (if it exists) */
-  next?: Maybe<Scalars['Int']['output']>;
-  /** The amount of pages. */
-  pages?: Maybe<Scalars['Int']['output']>;
-  /** Number of the previous page (if it exists) */
-  prev?: Maybe<Scalars['Int']['output']>;
-};
-
-export type Location = {
-  __typename?: 'Location';
-  /** Time at which the location was created in the database. */
-  created?: Maybe<Scalars['String']['output']>;
-  /** The dimension in which the location is located. */
-  dimension?: Maybe<Scalars['String']['output']>;
-  /** The id of the location. */
-  id?: Maybe<Scalars['ID']['output']>;
-  /** The name of the location. */
-  name?: Maybe<Scalars['String']['output']>;
-  /** List of characters who have been last seen in the location. */
-  residents: Array<Maybe<Character>>;
-  /** The type of the location. */
-  type?: Maybe<Scalars['String']['output']>;
-};
-
-export type Locations = {
-  __typename?: 'Locations';
-  info?: Maybe<Info>;
-  results?: Maybe<Array<Maybe<Location>>>;
+export type MutationCreateMovieCommentArgs = {
+  movieCommentInput: MovieCommentInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  /** Get a specific character by ID */
-  character?: Maybe<Character>;
-  /** Get the list of all characters */
-  characters?: Maybe<Characters>;
-  /** Get a list of characters selected by ids */
-  charactersByIds?: Maybe<Array<Maybe<Character>>>;
-  /** Get a specific episode by ID */
-  episode?: Maybe<Episode>;
-  /** Get the list of all episodes */
-  episodes?: Maybe<Episodes>;
-  /** Get a list of episodes selected by ids */
-  episodesByIds?: Maybe<Array<Maybe<Episode>>>;
-  /** Get a specific locations by ID */
-  location?: Maybe<Location>;
-  /** Get the list of all locations */
-  locations?: Maybe<Locations>;
-  /** Get a list of locations selected by ids */
-  locationsByIds?: Maybe<Array<Maybe<Location>>>;
+  getAllMovies: Array<Movie>;
+  getAllUsers: Array<User>;
+  getMovieById: Movie;
+  getUserById: User;
 };
 
 
-export type QueryCharacterArgs = {
-  id: Scalars['ID']['input'];
+export type QueryGetMovieByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
-export type QueryCharactersArgs = {
-  filter?: InputMaybe<FilterCharacter>;
-  page?: InputMaybe<Scalars['Int']['input']>;
+export type QueryGetUserByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
-
-export type QueryCharactersByIdsArgs = {
-  ids: Array<Scalars['ID']['input']>;
+/** User model */
+export type User = {
+  __typename?: 'User';
+  createdAt: Scalars['String']['output'];
+  /** Description to user's username */
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  movieCommentsUserLeft: Array<MovieComment>;
+  username: Scalars['String']['output'];
 };
 
-
-export type QueryEpisodeArgs = {
-  id: Scalars['ID']['input'];
-};
+export type GetAllMoviesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type QueryEpisodesArgs = {
-  filter?: InputMaybe<FilterEpisode>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-};
+export type GetAllMoviesQuery = { __typename?: 'Query', getAllMovies: Array<{ __typename?: 'Movie', id: number, title: string, description?: string | null }> };
 
-
-export type QueryEpisodesByIdsArgs = {
-  ids: Array<Scalars['ID']['input']>;
-};
-
-
-export type QueryLocationArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type QueryLocationsArgs = {
-  filter?: InputMaybe<FilterLocation>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-};
-
-
-export type QueryLocationsByIdsArgs = {
-  ids: Array<Scalars['ID']['input']>;
-};
-
-export type CharactersQueryVariables = Exact<{
-  page?: InputMaybe<Scalars['Int']['input']>;
-  filter?: InputMaybe<FilterCharacter>;
+export type GetMovieByIdQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
 }>;
 
 
-export type CharactersQuery = { __typename?: 'Query', characters?: { __typename?: 'Characters', info?: { __typename?: 'Info', count?: number | null, pages?: number | null, next?: number | null, prev?: number | null } | null, results?: Array<{ __typename?: 'Character', id?: string | null, image?: string | null, name?: string | null, gender?: string | null, species?: string | null, episode: Array<{ __typename?: 'Episode', id?: string | null, episode?: string | null, air_date?: string | null } | null>, origin?: { __typename?: 'Location', dimension?: string | null, id?: string | null } | null } | null> | null } | null };
-
-export type CharacterQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
+export type GetMovieByIdQuery = { __typename?: 'Query', getMovieById: { __typename?: 'Movie', id: number, title: string, description?: string | null, movieComment: Array<{ __typename?: 'MovieComment', description?: string | null, likes: number }> } };
 
 
-export type CharacterQuery = { __typename?: 'Query', character?: { __typename?: 'Character', id?: string | null, image?: string | null, name?: string | null, gender?: string | null, species?: string | null, origin?: { __typename?: 'Location', dimension?: string | null, id?: string | null } | null } | null };
-
-
-export const CharactersDocument = gql`
-    query characters($page: Int, $filter: FilterCharacter) {
-  characters(page: $page, filter: $filter) {
-    info {
-      count
-      pages
-      next
-      prev
-    }
-    results {
-      id
-      image
-      name
-      gender
-      species
-      episode {
-        id
-        episode
-        air_date
-      }
-      origin {
-        dimension
-        id
-      }
-    }
+export const GetAllMoviesDocument = gql`
+    query getAllMovies {
+  getAllMovies {
+    id
+    title
+    description
   }
 }
     `;
 
 /**
- * __useCharactersQuery__
+ * __useGetAllMoviesQuery__
  *
- * To run a query within a React component, call `useCharactersQuery` and pass it any options that fit your needs.
- * When your component renders, `useCharactersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllMoviesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllMoviesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useCharactersQuery({
+ * const { data, loading, error } = useGetAllMoviesQuery({
  *   variables: {
- *      page: // value for 'page'
- *      filter: // value for 'filter'
  *   },
  * });
  */
-export function useCharactersQuery(baseOptions?: Apollo.QueryHookOptions<CharactersQuery, CharactersQueryVariables>) {
+export function useGetAllMoviesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllMoviesQuery, GetAllMoviesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CharactersQuery, CharactersQueryVariables>(CharactersDocument, options);
+        return Apollo.useQuery<GetAllMoviesQuery, GetAllMoviesQueryVariables>(GetAllMoviesDocument, options);
       }
-export function useCharactersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CharactersQuery, CharactersQueryVariables>) {
+export function useGetAllMoviesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllMoviesQuery, GetAllMoviesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CharactersQuery, CharactersQueryVariables>(CharactersDocument, options);
+          return Apollo.useLazyQuery<GetAllMoviesQuery, GetAllMoviesQueryVariables>(GetAllMoviesDocument, options);
         }
-export function useCharactersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CharactersQuery, CharactersQueryVariables>) {
+export function useGetAllMoviesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllMoviesQuery, GetAllMoviesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<CharactersQuery, CharactersQueryVariables>(CharactersDocument, options);
+          return Apollo.useSuspenseQuery<GetAllMoviesQuery, GetAllMoviesQueryVariables>(GetAllMoviesDocument, options);
         }
-export type CharactersQueryHookResult = ReturnType<typeof useCharactersQuery>;
-export type CharactersLazyQueryHookResult = ReturnType<typeof useCharactersLazyQuery>;
-export type CharactersSuspenseQueryHookResult = ReturnType<typeof useCharactersSuspenseQuery>;
-export type CharactersQueryResult = Apollo.QueryResult<CharactersQuery, CharactersQueryVariables>;
-export const CharacterDocument = gql`
-    query character($id: ID!) {
-  character(id: $id) {
+export type GetAllMoviesQueryHookResult = ReturnType<typeof useGetAllMoviesQuery>;
+export type GetAllMoviesLazyQueryHookResult = ReturnType<typeof useGetAllMoviesLazyQuery>;
+export type GetAllMoviesSuspenseQueryHookResult = ReturnType<typeof useGetAllMoviesSuspenseQuery>;
+export type GetAllMoviesQueryResult = Apollo.QueryResult<GetAllMoviesQuery, GetAllMoviesQueryVariables>;
+export const GetMovieByIdDocument = gql`
+    query getMovieById($id: Int!) {
+  getMovieById(id: $id) {
     id
-    image
-    name
-    gender
-    species
-    origin {
-      dimension
-      id
+    title
+    description
+    movieComment {
+      description
+      likes
     }
   }
 }
     `;
 
 /**
- * __useCharacterQuery__
+ * __useGetMovieByIdQuery__
  *
- * To run a query within a React component, call `useCharacterQuery` and pass it any options that fit your needs.
- * When your component renders, `useCharacterQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetMovieByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMovieByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useCharacterQuery({
+ * const { data, loading, error } = useGetMovieByIdQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useCharacterQuery(baseOptions: Apollo.QueryHookOptions<CharacterQuery, CharacterQueryVariables>) {
+export function useGetMovieByIdQuery(baseOptions: Apollo.QueryHookOptions<GetMovieByIdQuery, GetMovieByIdQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<CharacterQuery, CharacterQueryVariables>(CharacterDocument, options);
+        return Apollo.useQuery<GetMovieByIdQuery, GetMovieByIdQueryVariables>(GetMovieByIdDocument, options);
       }
-export function useCharacterLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CharacterQuery, CharacterQueryVariables>) {
+export function useGetMovieByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMovieByIdQuery, GetMovieByIdQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<CharacterQuery, CharacterQueryVariables>(CharacterDocument, options);
+          return Apollo.useLazyQuery<GetMovieByIdQuery, GetMovieByIdQueryVariables>(GetMovieByIdDocument, options);
         }
-export function useCharacterSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CharacterQuery, CharacterQueryVariables>) {
+export function useGetMovieByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetMovieByIdQuery, GetMovieByIdQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<CharacterQuery, CharacterQueryVariables>(CharacterDocument, options);
+          return Apollo.useSuspenseQuery<GetMovieByIdQuery, GetMovieByIdQueryVariables>(GetMovieByIdDocument, options);
         }
-export type CharacterQueryHookResult = ReturnType<typeof useCharacterQuery>;
-export type CharacterLazyQueryHookResult = ReturnType<typeof useCharacterLazyQuery>;
-export type CharacterSuspenseQueryHookResult = ReturnType<typeof useCharacterSuspenseQuery>;
-export type CharacterQueryResult = Apollo.QueryResult<CharacterQuery, CharacterQueryVariables>;
+export type GetMovieByIdQueryHookResult = ReturnType<typeof useGetMovieByIdQuery>;
+export type GetMovieByIdLazyQueryHookResult = ReturnType<typeof useGetMovieByIdLazyQuery>;
+export type GetMovieByIdSuspenseQueryHookResult = ReturnType<typeof useGetMovieByIdSuspenseQuery>;
+export type GetMovieByIdQueryResult = Apollo.QueryResult<GetMovieByIdQuery, GetMovieByIdQueryVariables>;

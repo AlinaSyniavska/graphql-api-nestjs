@@ -8,15 +8,15 @@ import { MovieCommentModule } from './movie-comment/movie-comment.module';
 
 @Module({
   imports: [
-    // GraphQLModule.forRoot<ApolloDriverConfig>({
-    GraphQLModule.forRoot({
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      // GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      cors: {
-        // origin: ['http://localhost:3000/'],
-        origin: '*',
-        credentials: true,
-      },
+      // cors: {
+      // origin: ['http://localhost:3000/'],
+      // origin: '*',
+      // credentials: true,
+      // },
     }),
     MovieModule,
     UserModule,

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const CHARACTERS_QUERY = gql`
+/*export const CHARACTERS_QUERY = gql`
   query characters($page: Int, $filter: FilterCharacter) {
     characters(page: $page, filter: $filter) {
       info {
@@ -40,6 +40,30 @@ export const CHARACTER_QUERY = gql`
       origin {
         dimension
         id
+      }
+    }
+  }
+`;*/
+
+export const MOVIES_QUERY = gql`
+  query getAllMovies {
+    getAllMovies {
+        id
+        title
+        description
+      }
+  }
+`;
+
+export const SINGLE_MOVIE_QUERY = gql`
+  query getMovieById($id: Int!) {
+    getMovieById(id: $id) {
+      id
+      title
+      description
+      movieComment {
+        description
+        likes
       }
     }
   }
