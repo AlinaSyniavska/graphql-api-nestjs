@@ -27,12 +27,12 @@ function Home() {
     <NextUIProvider>
       <main
         className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-r from-purple-500 to-pink-500">
-        <div className="z-10 max-w-5xl w-full flex flex-col gap-5 font-mono text-sm">
+        <div className="grid grid-cols-4 gap-4 font-mono text-sm">
 
           {data?.getAllMovies.map((movie) => (
             <Card
               isBlurred
-              className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]"
+              className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px] h-20"
               shadow="sm"
               key={movie.id}
             >

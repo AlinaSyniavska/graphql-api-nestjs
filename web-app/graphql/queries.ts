@@ -62,6 +62,7 @@ export const SINGLE_MOVIE_QUERY = gql`
       title
       description
       movieComment {
+        id
         description
         likes
       }

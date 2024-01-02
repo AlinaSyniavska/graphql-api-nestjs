@@ -116,7 +116,7 @@ export type GetMovieByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetMovieByIdQuery = { __typename?: 'Query', getMovieById: { __typename?: 'Movie', id: number, title: string, description?: string | null, movieComment: Array<{ __typename?: 'MovieComment', description?: string | null, likes: number }> } };
+export type GetMovieByIdQuery = { __typename?: 'Query', getMovieById: { __typename?: 'Movie', id: number, title: string, description?: string | null, movieComment: Array<{ __typename?: 'MovieComment', id: number, description?: string | null, likes: number }> } };
 
 
 export const GetAllMoviesDocument = gql`
@@ -167,6 +167,7 @@ export const GetMovieByIdDocument = gql`
     title
     description
     movieComment {
+      id
       description
       likes
     }
