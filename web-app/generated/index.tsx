@@ -118,6 +118,13 @@ export type GetMovieByIdQueryVariables = Exact<{
 
 export type GetMovieByIdQuery = { __typename?: 'Query', getMovieById: { __typename?: 'Movie', id: number, title: string, description?: string | null, movieComment: Array<{ __typename?: 'MovieComment', id: number, description?: string | null, likes: number }> } };
 
+export type NewMovieMutationVariables = Exact<{
+  movie: MovieInputCreate;
+}>;
+
+
+export type NewMovieMutation = { __typename?: 'Mutation', createMovie: { __typename?: 'Movie', title: string, description?: string | null } };
+
 
 export const GetAllMoviesDocument = gql`
     query getAllMovies {
@@ -207,3 +214,37 @@ export type GetMovieByIdQueryHookResult = ReturnType<typeof useGetMovieByIdQuery
 export type GetMovieByIdLazyQueryHookResult = ReturnType<typeof useGetMovieByIdLazyQuery>;
 export type GetMovieByIdSuspenseQueryHookResult = ReturnType<typeof useGetMovieByIdSuspenseQuery>;
 export type GetMovieByIdQueryResult = Apollo.QueryResult<GetMovieByIdQuery, GetMovieByIdQueryVariables>;
+export const NewMovieDocument = gql`
+    mutation newMovie($movie: MovieInputCreate!) {
+  createMovie(movieInputCreate: $movie) {
+    title
+    description
+  }
+}
+    `;
+export type NewMovieMutationFn = Apollo.MutationFunction<NewMovieMutation, NewMovieMutationVariables>;
+
+/**
+ * __useNewMovieMutation__
+ *
+ * To run a mutation, you first call `useNewMovieMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useNewMovieMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [newMovieMutation, { data, loading, error }] = useNewMovieMutation({
+ *   variables: {
+ *      movie: // value for 'movie'
+ *   },
+ * });
+ */
+export function useNewMovieMutation(baseOptions?: Apollo.MutationHookOptions<NewMovieMutation, NewMovieMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<NewMovieMutation, NewMovieMutationVariables>(NewMovieDocument, options);
+      }
+export type NewMovieMutationHookResult = ReturnType<typeof useNewMovieMutation>;
+export type NewMovieMutationResult = Apollo.MutationResult<NewMovieMutation>;
+export type NewMovieMutationOptions = Apollo.BaseMutationOptions<NewMovieMutation, NewMovieMutationVariables>;

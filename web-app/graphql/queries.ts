@@ -69,3 +69,12 @@ export const SINGLE_MOVIE_QUERY = gql`
     }
   }
 `;
+
+const CREATE_MOVIE = gql`
+  mutation newMovie($movie: MovieInputCreate!) {
+  createMovie(movieInputCreate: $movie) {
+    title
+    description
+  }
+}
+`;
