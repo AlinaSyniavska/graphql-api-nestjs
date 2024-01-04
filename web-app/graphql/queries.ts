@@ -70,11 +70,20 @@ export const SINGLE_MOVIE_QUERY = gql`
   }
 `;
 
-const CREATE_MOVIE = gql`
+export const CREATE_MOVIE = gql`
   mutation createMovie($movie: MovieInputCreate!) {
   createMovie(movieInputCreate: $movie) {
     title
     description
   }
 }
+`;
+
+export const DELETE_MOVIE = gql`
+  mutation deleteMovie($id: Int!) {
+    deleteMovie(id: $id) {
+      id
+      title
+    }
+  }
 `;

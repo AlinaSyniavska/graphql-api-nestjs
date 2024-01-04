@@ -7,17 +7,17 @@ import { Button, NextUIProvider } from '@nextui-org/react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 
 import withApollo from '../../lib/withApollo';
-import { useCreateMovieMutation, useGetAllMoviesQuery } from '../../generated';
+import { useCreateMovieMutation, useDeleteMovieMutation, useGetAllMoviesQuery } from '../../generated';
 import { MOVIES_QUERY } from '../../graphql/queries';
 
 function Home() {
   const { data, loading, error } = useGetAllMoviesQuery();
-
   const [createMovieMutation, {
     // data: newMovie,
     // error: newMovieError,
     // loading: newMovieLoading,
   }] = useCreateMovieMutation();
+  const [deleteMovieMutation] = useDeleteMovieMutation();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -45,8 +45,13 @@ function Home() {
 
   };
 
-  const deleteMovie = () => {
-
+  const deleteMovie = async (id: number) => {
+    await deleteMovieMutation({
+      variables: {
+        id,
+      },
+      refetchQueries: [{ query: MOVIES_QUERY }],
+    });
   };
 
   return (
@@ -83,7 +88,7 @@ function Home() {
                   Edit
                 </Button>
                 <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg"
-                        size="sm" onClick={deleteMovie}>
+                        size="sm" onClick={() => deleteMovie(movie.id)}>
                   Delete
                 </Button>
               </CardFooter>
