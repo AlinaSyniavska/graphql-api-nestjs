@@ -40,6 +40,13 @@ export class MovieResolver {
     return this.movieService.createMovie(movieInputCreate);
   }
 
+  @Mutation(() => Movie)
+  async deleteMovie(
+    @Args('id', { type: () => Int }) id: number,
+  ): Promise<Movie> {
+    return this.movieService.deleteMovie(id);
+  }
+
   @ResolveField('movieComment', () => [MovieComment])
   async getMovieComment(@Parent() movie: Movie) {
     const { id } = movie;
