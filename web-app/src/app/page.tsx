@@ -5,20 +5,19 @@ import React from 'react';
 import Link from 'next/link';
 import { Button, NextUIProvider } from '@nextui-org/react';
 import { Card, CardBody } from '@nextui-org/card';
-import { useRouter } from 'next/navigation';
 
 import withApollo from '../../lib/withApollo';
 import { useCreateMovieMutation, useGetAllMoviesQuery } from '../../generated';
+import { MOVIES_QUERY } from '../../graphql/queries';
 
 function Home() {
   const { data, loading, error } = useGetAllMoviesQuery();
-  const [createMovieMutation, {
-    data: newMovie,
-    error: newMovieError,
-    loading: newMovieLoading,
-  }] = useCreateMovieMutation();
 
-  const router = useRouter();
+  const [createMovieMutation, {
+    // data: newMovie,
+    // error: newMovieError,
+    // loading: newMovieLoading,
+  }] = useCreateMovieMutation();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -37,13 +36,10 @@ function Home() {
           title: '555',
           description: '*** **** ***',
         }
-      }
+      },
+     refetchQueries: [{query: MOVIES_QUERY}],
     });
-
-    router.refresh();
   };
-
-
 
   return (
     <NextUIProvider>
