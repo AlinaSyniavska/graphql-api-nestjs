@@ -1,18 +1,31 @@
-import React, { FC } from 'react';
+import React, { Dispatch, FC, SetStateAction, useState } from 'react';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
+
+import { INewMovie } from '@/interfaces';
 
 interface IProps {
   isOpen: boolean,
   onOpenChange: () => void,
+  setNewMovieFromForm: Dispatch<SetStateAction<INewMovie | null>>,
 }
 
-const NewMovieModalForm: FC<IProps> = ({isOpen, onOpenChange}) => {
+const NewMovieModalForm: FC<IProps> = ({ isOpen, onOpenChange, setNewMovieFromForm }) => {
+
+  const [titleValue, setTitleValue] = useState<string>('');
+  const [descriptionValue, setDescriptionValue] = useState<string>('');
+
+  const handleCloseModal = () => {
+    setTitleValue('');
+    setDescriptionValue('');
+  }
+
   return (
     <>
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         placement="top-center"
+        onClose={handleCloseModal}
       >
         <ModalContent>
           {(onClose) => (
@@ -21,28 +34,34 @@ const NewMovieModalForm: FC<IProps> = ({isOpen, onOpenChange}) => {
               <ModalBody>
                 <Input
                   autoFocus
-/*                  endContent={
-                    <MailIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                  }*/
-                  label="Email"
-                  placeholder="Enter your email"
+                  type={'text'}
+                  label="Title"
+                  placeholder="Enter a title"
                   variant="bordered"
+                  value={titleValue}
+                  onValueChange={setTitleValue}
                 />
                 <Input
-/*                  endContent={
-                    <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
-                  }*/
-                  label="Password"
-                  placeholder="Enter your password"
-                  type="password"
+                  type={'text'}
+                  label="Description"
+                  placeholder="Enter a description"
                   variant="bordered"
+                  value={descriptionValue}
+                  onValueChange={setDescriptionValue}
                 />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={onClose}>
+                <Button color="primary" onPress={() => {
+                  setNewMovieFromForm({
+                    title: titleValue,
+                    description: descriptionValue,
+                  });
+
+                  onClose();
+                }}>
                   Add
                 </Button>
               </ModalFooter>

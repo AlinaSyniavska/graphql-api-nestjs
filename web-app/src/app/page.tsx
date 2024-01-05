@@ -1,7 +1,7 @@
 'use client';
 
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button, NextUIProvider, useDisclosure } from '@nextui-org/react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
@@ -11,6 +11,7 @@ import withApollo from '../../lib/withApollo';
 import { useCreateMovieMutation, useDeleteMovieMutation, useGetAllMoviesQuery } from '../../generated';
 import { MOVIES_QUERY } from '../../graphql/queries';
 import NewMovieModalForm from '@/components/NewMovieModalForm/NewMovieModalForm';
+import { INewMovie } from '@/interfaces';
 
 function Home() {
   const { data, loading, error } = useGetAllMoviesQuery();
@@ -21,8 +22,25 @@ function Home() {
 
   const [addSnackOpen, setAddSnackOpen] = useState<boolean>(false);
   const [deleteSnackOpen, setDeleteSnackOpen] = useState<boolean>(false);
+  const [newMovieFromForm, setNewMovieFromForm] = useState<INewMovie | null>(null);
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  useEffect(() => {
+    if (newMovieFromForm) {
+      createMovieMutation({
+        variables: {
+          movie: {
+            title: newMovieFromForm.title,
+            description: newMovieFromForm.description,
+          },
+        },
+        refetchQueries: [{ query: MOVIES_QUERY }],
+      }).then(value => console.log(value));
+
+      setAddSnackOpen(true);
+    }
+  }, [newMovieFromForm, createMovieMutation]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -32,23 +50,6 @@ function Home() {
       <p>{JSON.stringify(error)}</p>
     </div>;
   }
-
-  const addNewMovie = async () => {
-/*    await createMovieMutation({
-      variables: {
-        movie: {
-          title: 'Movie',
-          description: 'Some description',
-        },
-      },
-      refetchQueries: [{ query: MOVIES_QUERY }],
-    });
-
-    setAddSnackOpen(true);*/
-
-    onOpen();
-
-  };
 
   const updateMovie = () => {
 
@@ -79,6 +80,7 @@ function Home() {
     <NextUIProvider>
       <main
         className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-r from-purple-500 to-pink-500">
+
         <div className="grid grid-cols-2 gap-4 font-mono text-sm">
 
           {data?.getAllMovies.map((movie) => (
@@ -116,13 +118,13 @@ function Home() {
             </Card>
           ))}
 
-          <Button color="primary" variant="shadow" onClick={addNewMovie}>
+          <Button color="primary" variant="shadow" onClick={onOpen}>
             + Add
           </Button>
 
         </div>
 
-        <NewMovieModalForm isOpen={isOpen} onOpenChange={onOpenChange}/>
+        <NewMovieModalForm isOpen={isOpen} onOpenChange={onOpenChange} setNewMovieFromForm={setNewMovieFromForm} />
 
         <Snackbar
           open={addSnackOpen}
