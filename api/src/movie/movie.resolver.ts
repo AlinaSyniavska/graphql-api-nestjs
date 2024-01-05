@@ -8,7 +8,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 
-import { MovieInputCreate } from './movie.input';
+import { MovieInputCreate, MovieInputEdit } from './movie.input';
 import { Movie } from './movie.model';
 import { MovieService } from './movie.service';
 import { MovieCommentService } from '../movie-comment/movie-comment.service';
@@ -38,6 +38,13 @@ export class MovieResolver {
     @Args('movieInputCreate') movieInputCreate: MovieInputCreate,
   ): Promise<Movie> {
     return this.movieService.createMovie(movieInputCreate);
+  }
+
+  @Mutation(() => Movie)
+  async updateMovie(
+    @Args('movieInputEdit') movieInputEdit: MovieInputEdit,
+  ): Promise<Movie> {
+    return this.movieService.editMovie(movieInputEdit);
   }
 
   @Mutation(() => Movie)

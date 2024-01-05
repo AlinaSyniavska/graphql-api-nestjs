@@ -23,14 +23,15 @@ function SingleMovie({ params }: { params: { id: string } }) {
 
   return (
     <NextUIProvider>
-      <section className={'h-screen bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center flex-col'}>
+      <section
+        className={'h-screen bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center flex-col'}>
 
         <div className={'absolute left-5 top-2'}>
-          <span
-          className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              &lt;-
-            </span>
-            <Link href={'/'}>BACK</Link>
+          <Link href={'/'}>
+            <span
+              className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">&lt;-</span>
+            BACK
+          </Link>
         </div>
 
         <Card
