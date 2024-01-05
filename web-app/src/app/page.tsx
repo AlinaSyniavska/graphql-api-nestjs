@@ -1,10 +1,11 @@
 'use client';
 
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button, NextUIProvider } from '@nextui-org/react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
+import { Alert, Snackbar } from '@mui/material';
 
 import withApollo from '../../lib/withApollo';
 import { useCreateMovieMutation, useDeleteMovieMutation, useGetAllMoviesQuery } from '../../generated';
@@ -13,11 +14,14 @@ import { MOVIES_QUERY } from '../../graphql/queries';
 function Home() {
   const { data, loading, error } = useGetAllMoviesQuery();
   const [createMovieMutation, {
-    // data: newMovie,
+    data: newMovie,
     // error: newMovieError,
     // loading: newMovieLoading,
   }] = useCreateMovieMutation();
   const [deleteMovieMutation, {data: deletedMovie}] = useDeleteMovieMutation();
+
+  const [addSnackOpen, setAddSnackOpen] = useState<boolean>(false);
+  const [deleteSnackOpen, setDeleteSnackOpen] = useState<boolean>(false);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -27,7 +31,6 @@ function Home() {
       <p>{JSON.stringify(error)}</p>
     </div>;
   }
-
 
   const addNewMovie = async () => {
     await createMovieMutation({
@@ -39,6 +42,8 @@ function Home() {
       },
       refetchQueries: [{ query: MOVIES_QUERY }],
     });
+
+    setAddSnackOpen(true);
   };
 
   const updateMovie = () => {
@@ -52,6 +57,18 @@ function Home() {
       },
       refetchQueries: [{ query: MOVIES_QUERY }],
     });
+
+    setDeleteSnackOpen(true);
+  };
+
+  const handleAddSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return
+    setAddSnackOpen(false)
+  };
+
+  const handleDeleteSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return
+    setDeleteSnackOpen(false)
   };
 
   return (
@@ -68,7 +85,7 @@ function Home() {
               key={movie.id}
             >
               <CardBody>
-                <Link href="/[id]" as={`/${movie.id}`}>
+                <Link href={`/${movie.id}`}>
                   <div className="flex flex-col col-span-6 md:col-span-8 mb-20">
                     <div className="flex justify-between items-start">
                       <div className="flex flex-col gap-0">
@@ -100,6 +117,24 @@ function Home() {
           </Button>
 
         </div>
+
+        <Snackbar
+          open={addSnackOpen}
+          autoHideDuration={2000}
+          onClose={handleAddSnackClose}
+          anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+        >
+          <Alert severity="success" sx={{ width: '100%' }}> Movie {newMovie?.createMovie.title} is successfully added! </Alert>
+        </Snackbar>
+
+        <Snackbar
+          open={deleteSnackOpen}
+          autoHideDuration={2000}
+          onClose={handleDeleteSnackClose}
+          anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+        >
+          <Alert severity="warning" sx={{ width: '100%' }}> Movie {deletedMovie?.deleteMovie.title} is successfully deleted! </Alert>
+        </Snackbar>
 
       </main>
     </NextUIProvider>
