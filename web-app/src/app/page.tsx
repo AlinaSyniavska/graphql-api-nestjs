@@ -17,7 +17,7 @@ function Home() {
     // error: newMovieError,
     // loading: newMovieLoading,
   }] = useCreateMovieMutation();
-  const [deleteMovieMutation] = useDeleteMovieMutation();
+  const [deleteMovieMutation, {data: deletedMovie}] = useDeleteMovieMutation();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -68,17 +68,17 @@ function Home() {
               key={movie.id}
             >
               <CardBody>
-                <div className="flex flex-col col-span-6 md:col-span-8 mb-20">
-                  <div className="flex justify-between items-start">
-                    <div className="flex flex-col gap-0">
-                      <h3 className="font-semibold text-foreground/90">
-                        <Link href="/[id]" as={`/${movie.id}`}>
+                <Link href="/[id]" as={`/${movie.id}`}>
+                  <div className="flex flex-col col-span-6 md:col-span-8 mb-20">
+                    <div className="flex justify-between items-start">
+                      <div className="flex flex-col gap-0">
+                        <h3 className="font-semibold text-foreground/90">
                           {movie.title}
-                        </Link>
-                      </h3>
+                        </h3>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               </CardBody>
 
               <CardFooter

@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/material": "^5.15.3",
     "@nextui-org/react": "^2.2.9",
     "framer-motion": "^10.16.16",
     "graphql": "^16.8.1",
