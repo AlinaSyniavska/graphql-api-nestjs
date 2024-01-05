@@ -3,25 +3,26 @@
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Button, NextUIProvider } from '@nextui-org/react';
+import { Button, NextUIProvider, useDisclosure } from '@nextui-org/react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { Alert, Snackbar } from '@mui/material';
 
 import withApollo from '../../lib/withApollo';
 import { useCreateMovieMutation, useDeleteMovieMutation, useGetAllMoviesQuery } from '../../generated';
 import { MOVIES_QUERY } from '../../graphql/queries';
+import NewMovieModalForm from '@/components/NewMovieModalForm/NewMovieModalForm';
 
 function Home() {
   const { data, loading, error } = useGetAllMoviesQuery();
   const [createMovieMutation, {
     data: newMovie,
-    // error: newMovieError,
-    // loading: newMovieLoading,
   }] = useCreateMovieMutation();
-  const [deleteMovieMutation, {data: deletedMovie}] = useDeleteMovieMutation();
+  const [deleteMovieMutation, { data: deletedMovie }] = useDeleteMovieMutation();
 
   const [addSnackOpen, setAddSnackOpen] = useState<boolean>(false);
   const [deleteSnackOpen, setDeleteSnackOpen] = useState<boolean>(false);
+
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -33,17 +34,20 @@ function Home() {
   }
 
   const addNewMovie = async () => {
-    await createMovieMutation({
+/*    await createMovieMutation({
       variables: {
         movie: {
-          title: '555',
-          description: '*** **** ***',
+          title: 'Movie',
+          description: 'Some description',
         },
       },
       refetchQueries: [{ query: MOVIES_QUERY }],
     });
 
-    setAddSnackOpen(true);
+    setAddSnackOpen(true);*/
+
+    onOpen();
+
   };
 
   const updateMovie = () => {
@@ -62,13 +66,13 @@ function Home() {
   };
 
   const handleAddSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') return
-    setAddSnackOpen(false)
+    if (reason === 'clickaway') return;
+    setAddSnackOpen(false);
   };
 
   const handleDeleteSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') return
-    setDeleteSnackOpen(false)
+    if (reason === 'clickaway') return;
+    setDeleteSnackOpen(false);
   };
 
   return (
@@ -118,22 +122,26 @@ function Home() {
 
         </div>
 
+        <NewMovieModalForm isOpen={isOpen} onOpenChange={onOpenChange}/>
+
         <Snackbar
           open={addSnackOpen}
           autoHideDuration={2000}
           onClose={handleAddSnackClose}
-          anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="success" sx={{ width: '100%' }}> Movie {newMovie?.createMovie.title} is successfully added! </Alert>
+          <Alert severity="success" sx={{ width: '100%' }}> Movie {newMovie?.createMovie.title} is successfully
+            added! </Alert>
         </Snackbar>
 
         <Snackbar
           open={deleteSnackOpen}
           autoHideDuration={2000}
           onClose={handleDeleteSnackClose}
-          anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="warning" sx={{ width: '100%' }}> Movie {deletedMovie?.deleteMovie.title} is successfully deleted! </Alert>
+          <Alert severity="warning" sx={{ width: '100%' }}> Movie {deletedMovie?.deleteMovie.title} is successfully
+            deleted! </Alert>
         </Snackbar>
 
       </main>
