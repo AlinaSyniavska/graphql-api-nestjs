@@ -29,7 +29,7 @@ export class MovieService {
     });
   }
 
-  async editMovie({ id, title, description }: MovieInputEdit): Promise<Movie> {
+  async updateMovie({ id, title, description }: MovieInputEdit): Promise<Movie> {
     return this.prisma.movie.upsert({
       update: {
         title,

@@ -44,7 +44,7 @@ export class MovieResolver {
   async updateMovie(
     @Args('movieInputEdit') movieInputEdit: MovieInputEdit,
   ): Promise<Movie> {
-    return this.movieService.editMovie(movieInputEdit);
+    return this.movieService.updateMovie(movieInputEdit);
   }
 
   @Mutation(() => Movie)
