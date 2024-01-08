@@ -2,11 +2,13 @@ import React, {Dispatch, FC, SetStateAction, useState} from 'react';
 import {Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@nextui-org/react';
 
 import {INewMovie} from '@/interfaces';
+import {isCreateSig} from "@/app/page";
 
 interface IProps {
     isOpen: boolean,
     onOpenChange: () => void,
     setNewMovieFromForm: Dispatch<SetStateAction<INewMovie | null>>,
+    // isCreate: boolean,
 }
 
 const NewMovieModalForm: FC<IProps> = ({isOpen, onOpenChange, setNewMovieFromForm}) => {
@@ -34,7 +36,11 @@ const NewMovieModalForm: FC<IProps> = ({isOpen, onOpenChange, setNewMovieFromFor
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Create New Movie</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">
+                                {
+                                    isCreateSig.value ? 'Create New Movie' : 'Edit The Movie'
+                                }
+                            </ModalHeader>
                             <ModalBody>
                                 <Input
                                     autoFocus

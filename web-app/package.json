@@ -16,6 +16,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/material": "^5.15.3",
     "@nextui-org/react": "^2.2.9",
+    "@preact/signals-react": "^2.0.0",
     "framer-motion": "^10.16.16",
     "graphql": "^16.8.1",
     "next": "14.0.4",
