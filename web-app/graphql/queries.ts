@@ -72,11 +72,11 @@ export const SINGLE_MOVIE_QUERY = gql`
 
 export const CREATE_MOVIE = gql`
   mutation createMovie($movie: MovieInputCreate!) {
-  createMovie(movieInputCreate: $movie) {
-    title
-    description
-  }
-}
+      createMovie(movieInputCreate: $movie) {
+        title
+        description
+      }
+    }
 `;
 
 export const DELETE_MOVIE = gql`
@@ -87,3 +87,16 @@ export const DELETE_MOVIE = gql`
     }
   }
 `;
+
+export const UPDATE_MOVIE = gql`
+    mutation updateMovie($movie: MovieInputEdit!) {
+        updateMovie(movieInputEdit: $movie) {
+            id
+            title
+            description
+            createdAt
+            updatedAt
+        }
+    }
+`;
+

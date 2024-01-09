@@ -9,7 +9,12 @@ import {Alert, Snackbar} from '@mui/material';
 import {signal} from '@preact/signals-react';
 
 import withApollo from '../../lib/withApollo';
-import {useCreateMovieMutation, useDeleteMovieMutation, useGetAllMoviesQuery} from '../../generated';
+import {
+    useCreateMovieMutation,
+    useDeleteMovieMutation,
+    useGetAllMoviesQuery,
+    useUpdateMovieMutation
+} from '../../generated';
 import {MOVIES_QUERY} from '../../graphql/queries';
 import NewMovieModalForm from '@/components/NewMovieModalForm/NewMovieModalForm';
 import {INewMovie} from '@/interfaces';
@@ -22,9 +27,11 @@ function Home() {
         data: newMovie,
     }] = useCreateMovieMutation();
     const [deleteMovieMutation, {data: deletedMovie}] = useDeleteMovieMutation();
+    const [updateMovieMutation, {data: updatedMovie}] = useUpdateMovieMutation();
 
     const [addSnackOpen, setAddSnackOpen] = useState<boolean>(false);
     const [deleteSnackOpen, setDeleteSnackOpen] = useState<boolean>(false);
+    const [updateSnackOpen, setUpdateSnackOpen] = useState<boolean>(false);
     const [newMovieFromForm, setNewMovieFromForm] = useState<INewMovie | null>(null);
     const [movieForForm, setMovieForForm] = useState<INewMovie | null>(null);
 
@@ -32,8 +39,6 @@ function Home() {
 
     useEffect(() => {
         if (newMovieFromForm) {
-
-
             if (isCreateSig.value) {
                 createMovieMutation({
                     variables: {
@@ -43,16 +48,25 @@ function Home() {
                         },
                     },
                     refetchQueries: [{query: MOVIES_QUERY}],
-                }).then(value => console.log(value));
+                }).then(() => setNewMovieFromForm(null));
 
                 setAddSnackOpen(true);
             } else {
-                console.log(newMovieFromForm)
+                updateMovieMutation({
+                    variables: {
+                        movie: {
+                            id: movieForForm?.id!,
+                            title: newMovieFromForm.title,
+                            description: newMovieFromForm.description,
+                        },
+                    },
+                    refetchQueries: [{query: MOVIES_QUERY}],
+                }).then(() => setNewMovieFromForm(null));
+
+                setUpdateSnackOpen(true);
             }
-
-
         }
-    }, [newMovieFromForm, createMovieMutation]);
+    }, [newMovieFromForm, createMovieMutation, updateMovieMutation]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -98,6 +112,11 @@ function Home() {
     const handleDeleteSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') return;
         setDeleteSnackOpen(false);
+    };
+
+    const handleUpdateSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') return;
+        setUpdateSnackOpen(false);
     };
 
     return (
@@ -160,8 +179,7 @@ function Home() {
                     onClose={handleAddSnackClose}
                     anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                 >
-                    <Alert severity="success" sx={{width: '100%'}}> Movie {newMovie?.createMovie.title} is successfully
-                        added! </Alert>
+                    <Alert severity="success" sx={{width: '100%'}}> Movie {newMovie?.createMovie.title} is successfully added! </Alert>
                 </Snackbar>
 
                 <Snackbar
@@ -170,9 +188,16 @@ function Home() {
                     onClose={handleDeleteSnackClose}
                     anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                 >
-                    <Alert severity="warning" sx={{width: '100%'}}> Movie {deletedMovie?.deleteMovie.title} is
-                        successfully
-                        deleted! </Alert>
+                    <Alert severity="warning" sx={{width: '100%'}}> Movie {deletedMovie?.deleteMovie.title} is successfully deleted! </Alert>
+                </Snackbar>
+
+                <Snackbar
+                    open={updateSnackOpen}
+                    autoHideDuration={2000}
+                    onClose={handleUpdateSnackClose}
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                >
+                    <Alert severity="success" sx={{width: '100%'}}> Movie {updatedMovie?.updateMovie.title} is successfully updated! </Alert>
                 </Snackbar>
 
             </main>
