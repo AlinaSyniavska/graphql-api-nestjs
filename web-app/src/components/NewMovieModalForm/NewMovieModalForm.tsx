@@ -1,23 +1,60 @@
-import React, { Dispatch, FC, SetStateAction, useState } from 'react';
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react';
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
+import {
+  Button,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@nextui-org/react';
 
 import { INewMovie } from '@/interfaces';
+import { isCreateSig } from '@/app/page';
 
 interface IProps {
-  isOpen: boolean,
-  onOpenChange: () => void,
-  setNewMovieFromForm: Dispatch<SetStateAction<INewMovie | null>>,
+  isOpen: boolean;
+  onOpenChange: () => void;
+  setNewMovieFromForm: Dispatch<SetStateAction<INewMovie | null>>;
+  movieForForm?: INewMovie | null;
 }
 
-const NewMovieModalForm: FC<IProps> = ({ isOpen, onOpenChange, setNewMovieFromForm }) => {
+const NewMovieModalForm: FC<IProps> = ({
+  isOpen,
+  onOpenChange,
+  setNewMovieFromForm,
+  movieForForm,
+}) => {
+  const [titleValue, setTitleValue] = useState<string>(
+    movieForForm?.title || '',
+  );
+  const [descriptionValue, setDescriptionValue] = useState<string>(
+    movieForForm?.description || '',
+  );
 
-  const [titleValue, setTitleValue] = useState<string>('');
-  const [descriptionValue, setDescriptionValue] = useState<string>('');
+  useEffect(() => {
+    if (movieForForm?.title) {
+      setTitleValue(movieForForm.title);
+    }
+    if (movieForForm?.description) {
+      setDescriptionValue(movieForForm.description);
+    }
+  }, [movieForForm]);
 
   const handleCloseModal = () => {
     setTitleValue('');
     setDescriptionValue('');
-  }
+  };
+
+  const isInvalid = React.useMemo(() => {
+    return titleValue === '' || titleValue.length < 3;
+  }, [titleValue]);
 
   return (
     <>
@@ -30,7 +67,9 @@ const NewMovieModalForm: FC<IProps> = ({ isOpen, onOpenChange, setNewMovieFromFo
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Create New Movie</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                {isCreateSig.value ? 'Create New Movie' : 'Edit The Movie'}
+              </ModalHeader>
               <ModalBody>
                 <Input
                   autoFocus
@@ -40,6 +79,9 @@ const NewMovieModalForm: FC<IProps> = ({ isOpen, onOpenChange, setNewMovieFromFo
                   variant="bordered"
                   value={titleValue}
                   onValueChange={setTitleValue}
+                  isInvalid={isInvalid}
+                  color={isInvalid ? 'danger' : 'default'}
+                  errorMessage={isInvalid && 'Please enter a valid title'}
                 />
                 <Input
                   type={'text'}
@@ -54,15 +96,18 @@ const NewMovieModalForm: FC<IProps> = ({ isOpen, onOpenChange, setNewMovieFromFo
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={() => {
-                  setNewMovieFromForm({
-                    title: titleValue,
-                    description: descriptionValue,
-                  });
-
-                  onClose();
-                }}>
-                  Add
+                <Button
+                  color="primary"
+                  onPress={() => {
+                    setNewMovieFromForm({
+                      title: titleValue,
+                      description: descriptionValue,
+                    });
+                    onClose();
+                  }}
+                  isDisabled={isInvalid}
+                >
+                  {isCreateSig.value ? 'Add' : 'Edit'}
                 </Button>
               </ModalFooter>
             </>
@@ -72,5 +117,4 @@ const NewMovieModalForm: FC<IProps> = ({ isOpen, onOpenChange, setNewMovieFromFo
     </>
   );
 };
-
 export default NewMovieModalForm;

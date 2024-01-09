@@ -3,24 +3,23 @@ import {
   ApolloProvider,
   HttpLink,
   InMemoryCache,
-} from "@apollo/client";
+} from '@apollo/client';
 // import { useRouter } from "next/router";
-import { useRouter } from 'next/navigation'
-import nextWithApollo from "next-with-apollo";
+import { useRouter } from 'next/navigation';
+import nextWithApollo from 'next-with-apollo';
 
 const withApollo = nextWithApollo(
   ({ initialState, headers }) => {
     return new ApolloClient({
-      ssrMode: typeof window === "undefined",
+      ssrMode: typeof window === 'undefined',
       link: new HttpLink({
         // uri: "https://rickandmortyapi.com/graphql",
-        uri: "http://localhost:5000/graphql",
+        uri: 'http://localhost:5000/graphql',
       }),
       headers: {
         ...(headers as Record<string, string>),
       },
       cache: new InMemoryCache().restore(initialState || {}),
-
     });
   },
   {
@@ -33,7 +32,7 @@ const withApollo = nextWithApollo(
         </ApolloProvider>
       );
     },
-  }
+  },
 );
 
 export default withApollo;

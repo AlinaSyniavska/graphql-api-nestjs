@@ -6,53 +6,99 @@ import Link from 'next/link';
 import { Button, NextUIProvider, useDisclosure } from '@nextui-org/react';
 import { Card, CardBody, CardFooter } from '@nextui-org/card';
 import { Alert, Snackbar } from '@mui/material';
+import { signal } from '@preact/signals-react';
 
 import withApollo from '../../lib/withApollo';
-import { useCreateMovieMutation, useDeleteMovieMutation, useGetAllMoviesQuery } from '../../generated';
+import {
+  useCreateMovieMutation,
+  useDeleteMovieMutation,
+  useGetAllMoviesQuery,
+  useUpdateMovieMutation,
+} from '../../generated';
 import { MOVIES_QUERY } from '../../graphql/queries';
 import NewMovieModalForm from '@/components/NewMovieModalForm/NewMovieModalForm';
 import { INewMovie } from '@/interfaces';
 
+export const isCreateSig = signal<boolean>(true);
+
 function Home() {
   const { data, loading, error } = useGetAllMoviesQuery();
-  const [createMovieMutation, {
-    data: newMovie,
-  }] = useCreateMovieMutation();
-  const [deleteMovieMutation, { data: deletedMovie }] = useDeleteMovieMutation();
+  const [createMovieMutation, { data: newMovie }] = useCreateMovieMutation();
+  const [deleteMovieMutation, { data: deletedMovie }] =
+    useDeleteMovieMutation();
+  const [updateMovieMutation, { data: updatedMovie }] =
+    useUpdateMovieMutation();
 
   const [addSnackOpen, setAddSnackOpen] = useState<boolean>(false);
   const [deleteSnackOpen, setDeleteSnackOpen] = useState<boolean>(false);
-  const [newMovieFromForm, setNewMovieFromForm] = useState<INewMovie | null>(null);
+  const [updateSnackOpen, setUpdateSnackOpen] = useState<boolean>(false);
+  const [newMovieFromForm, setNewMovieFromForm] = useState<INewMovie | null>(
+    null,
+  );
+  const [movieForForm, setMovieForForm] = useState<INewMovie | null>(null);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
     if (newMovieFromForm) {
-      createMovieMutation({
-        variables: {
-          movie: {
-            title: newMovieFromForm.title,
-            description: newMovieFromForm.description,
+      if (isCreateSig.value) {
+        createMovieMutation({
+          variables: {
+            movie: {
+              title: newMovieFromForm.title,
+              description: newMovieFromForm.description,
+            },
           },
-        },
-        refetchQueries: [{ query: MOVIES_QUERY }],
-      }).then(value => console.log(value));
+          refetchQueries: [{ query: MOVIES_QUERY }],
+        }).then(() => setNewMovieFromForm(null));
 
-      setAddSnackOpen(true);
+        setAddSnackOpen(true);
+      } else {
+        updateMovieMutation({
+          variables: {
+            movie: {
+              id: movieForForm!.id!,
+              title: newMovieFromForm.title,
+              description: newMovieFromForm.description,
+            },
+          },
+          refetchQueries: [{ query: MOVIES_QUERY }],
+        }).then(() => setNewMovieFromForm(null));
+
+        setUpdateSnackOpen(true);
+      }
     }
-  }, [newMovieFromForm, createMovieMutation]);
+  }, [
+    newMovieFromForm,
+    movieForForm,
+    createMovieMutation,
+    updateMovieMutation,
+  ]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
   if (error) {
-    return <div className="min-h-screen items-center justify-center p-24 bg-gradient-to-r from-purple-500 to-pink-500">
-      <p>{JSON.stringify(error)}</p>
-    </div>;
+    return (
+      <div className="min-h-screen items-center justify-center p-24 bg-gradient-to-r from-purple-500 to-pink-500">
+        <p>{JSON.stringify(error)}</p>
+      </div>
+    );
   }
 
-  const updateMovie = () => {
+  const createMovie = () => {
+    isCreateSig.value = true;
+    onOpen();
+  };
 
+  const updateMovie = (movie: INewMovie) => {
+    isCreateSig.value = false;
+    setMovieForForm({
+      id: movie.id,
+      title: movie.title,
+      description: movie.description,
+    });
+    onOpen();
   };
 
   const deleteMovie = async (id: number) => {
@@ -66,23 +112,34 @@ function Home() {
     setDeleteSnackOpen(true);
   };
 
-  const handleAddSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleAddSnackClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
     if (reason === 'clickaway') return;
     setAddSnackOpen(false);
   };
 
-  const handleDeleteSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleDeleteSnackClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
     if (reason === 'clickaway') return;
     setDeleteSnackOpen(false);
   };
 
+  const handleUpdateSnackClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string,
+  ) => {
+    if (reason === 'clickaway') return;
+    setUpdateSnackOpen(false);
+  };
+
   return (
     <NextUIProvider>
-      <main
-        className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-r from-purple-500 to-pink-500">
-
+      <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gradient-to-r from-purple-500 to-pink-500">
         <div className="grid grid-cols-2 gap-4 font-mono text-sm">
-
           {data?.getAllMovies.map((movie) => (
             <Card
               isBlurred
@@ -104,27 +161,42 @@ function Home() {
                 </Link>
               </CardBody>
 
-              <CardFooter
-                className="justify-end gap-5 before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg"
-                        size="sm" onClick={updateMovie}>
+              <CardFooter className="justify-end gap-5 before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
+                <Button
+                  className="text-tiny text-white bg-black/20"
+                  variant="flat"
+                  color="default"
+                  radius="lg"
+                  size="sm"
+                  onClick={() => updateMovie(movie as INewMovie)}
+                >
                   Edit
                 </Button>
-                <Button className="text-tiny text-white bg-black/20" variant="flat" color="default" radius="lg"
-                        size="sm" onClick={() => deleteMovie(movie.id)}>
+                <Button
+                  className="text-tiny text-white bg-black/20"
+                  variant="flat"
+                  color="default"
+                  radius="lg"
+                  size="sm"
+                  onClick={() => deleteMovie(movie.id)}
+                >
                   Delete
                 </Button>
               </CardFooter>
             </Card>
           ))}
 
-          <Button color="primary" variant="shadow" onClick={onOpen}>
+          <Button color="primary" variant="shadow" onClick={createMovie}>
             + Add
           </Button>
-
         </div>
 
-        <NewMovieModalForm isOpen={isOpen} onOpenChange={onOpenChange} setNewMovieFromForm={setNewMovieFromForm} />
+        <NewMovieModalForm
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          setNewMovieFromForm={setNewMovieFromForm}
+          movieForForm={movieForForm}
+        />
 
         <Snackbar
           open={addSnackOpen}
@@ -132,8 +204,10 @@ function Home() {
           onClose={handleAddSnackClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="success" sx={{ width: '100%' }}> Movie {newMovie?.createMovie.title} is successfully
-            added! </Alert>
+          <Alert severity="success" sx={{ width: '100%' }}>
+            {' '}
+            Movie {newMovie?.createMovie.title} is successfully added!{' '}
+          </Alert>
         </Snackbar>
 
         <Snackbar
@@ -142,10 +216,23 @@ function Home() {
           onClose={handleDeleteSnackClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="warning" sx={{ width: '100%' }}> Movie {deletedMovie?.deleteMovie.title} is successfully
-            deleted! </Alert>
+          <Alert severity="warning" sx={{ width: '100%' }}>
+            {' '}
+            Movie {deletedMovie?.deleteMovie.title} is successfully deleted!{' '}
+          </Alert>
         </Snackbar>
 
+        <Snackbar
+          open={updateSnackOpen}
+          autoHideDuration={2000}
+          onClose={handleUpdateSnackClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <Alert severity="success" sx={{ width: '100%' }}>
+            {' '}
+            Movie {updatedMovie?.updateMovie.title} is successfully updated!{' '}
+          </Alert>
+        </Snackbar>
       </main>
     </NextUIProvider>
   );

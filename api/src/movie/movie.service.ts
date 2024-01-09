@@ -9,7 +9,11 @@ export class MovieService {
   constructor(private prisma: PrismaService) {}
 
   async getAllMovies(): Promise<Movie[]> {
-    return this.prisma.movie.findMany();
+    return this.prisma.movie.findMany({
+      orderBy: {
+        id: 'asc',
+      }
+    });
   }
 
   async getMovieById(id: number): Promise<Movie> {
@@ -29,7 +33,7 @@ export class MovieService {
     });
   }
 
-  async editMovie({ id, title, description }: MovieInputEdit): Promise<Movie> {
+  async updateMovie({ id, title, description }: MovieInputEdit): Promise<Movie> {
     return this.prisma.movie.upsert({
       update: {
         title,
