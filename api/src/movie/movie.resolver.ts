@@ -8,23 +8,23 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
-import { PubSub } from 'graphql-subscriptions';
 
 import { MovieInputCreate, MovieInputEdit } from './movie.input';
 import { Movie } from './movie.model';
 import { MovieService } from './movie.service';
 import { MovieCommentService } from '../movie-comment/movie-comment.service';
 import { MovieComment } from '../movie-comment/movie-comment.model';
+import { Inject } from '@nestjs/common';
+import { PubSub } from 'graphql-subscriptions';
 
 const MOVIE_ADDED_EVENT = 'movieAdded';
-
-const pubSub = new PubSub();
 
 @Resolver(() => Movie)
 export class MovieResolver {
   constructor(
     private movieService: MovieService,
     private movieCommentService: MovieCommentService,
+    @Inject('PUB_SUB') private pubSub: PubSub,
   ) {}
 
   @Query(() => [Movie])
@@ -46,7 +46,7 @@ export class MovieResolver {
     // return this.movieService.createMovie(movieInputCreate);
 
     const newMovie = this.movieService.createMovie(movieInputCreate);
-    await pubSub.publish(MOVIE_ADDED_EVENT, {
+    await this.pubSub.publish(MOVIE_ADDED_EVENT, {
       movieAddedSubscription: newMovie,
     });
 
@@ -77,6 +77,6 @@ export class MovieResolver {
     name: 'movieAddedSubscription',
   })
   movieAdded() {
-    return pubSub.asyncIterator(MOVIE_ADDED_EVENT);
+    return this.pubSub.asyncIterator(MOVIE_ADDED_EVENT);
   }
 }

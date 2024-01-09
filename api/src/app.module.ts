@@ -12,7 +12,7 @@ import { MovieCommentModule } from './movie-comment/movie-comment.module';
       driver: ApolloDriver,
       autoSchemaFile: true,
       subscriptions: {
-        "graphql-ws": true,
+        'graphql-ws': true,
         'subscriptions-transport-ws': true,
       },
     }),
