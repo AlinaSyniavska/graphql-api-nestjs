@@ -57,7 +57,7 @@ function Home() {
         updateMovieMutation({
           variables: {
             movie: {
-              id: movieForForm?.id!,
+              id: movieForForm!.id!,
               title: newMovieFromForm.title,
               description: newMovieFromForm.description,
             },
@@ -68,7 +68,12 @@ function Home() {
         setUpdateSnackOpen(true);
       }
     }
-  }, [newMovieFromForm, createMovieMutation, updateMovieMutation]);
+  }, [
+    newMovieFromForm,
+    movieForForm,
+    createMovieMutation,
+    updateMovieMutation,
+  ]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -199,7 +204,10 @@ function Home() {
           onClose={handleAddSnackClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="success" sx={{width: '100%'}}> Movie {newMovie?.createMovie.title} is successfully added! </Alert>
+          <Alert severity="success" sx={{ width: '100%' }}>
+            {' '}
+            Movie {newMovie?.createMovie.title} is successfully added!{' '}
+          </Alert>
         </Snackbar>
 
         <Snackbar
@@ -208,7 +216,10 @@ function Home() {
           onClose={handleDeleteSnackClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="warning" sx={{width: '100%'}}> Movie {deletedMovie?.deleteMovie.title} is successfully deleted! </Alert>
+          <Alert severity="warning" sx={{ width: '100%' }}>
+            {' '}
+            Movie {deletedMovie?.deleteMovie.title} is successfully deleted!{' '}
+          </Alert>
         </Snackbar>
 
         <Snackbar
@@ -217,7 +228,10 @@ function Home() {
           onClose={handleUpdateSnackClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="success" sx={{width: '100%'}}> Movie {updatedMovie?.updateMovie.title} is successfully updated! </Alert>
+          <Alert severity="success" sx={{ width: '100%' }}>
+            {' '}
+            Movie {updatedMovie?.updateMovie.title} is successfully updated!{' '}
+          </Alert>
         </Snackbar>
       </main>
     </NextUIProvider>
