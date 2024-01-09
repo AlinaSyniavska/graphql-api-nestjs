@@ -6,13 +6,13 @@ import Link from 'next/link';
 import {Button, NextUIProvider, useDisclosure} from '@nextui-org/react';
 import {Card, CardBody, CardFooter} from '@nextui-org/card';
 import {Alert, Snackbar} from '@mui/material';
+import {signal} from '@preact/signals-react';
 
 import withApollo from '../../lib/withApollo';
 import {useCreateMovieMutation, useDeleteMovieMutation, useGetAllMoviesQuery} from '../../generated';
 import {MOVIES_QUERY} from '../../graphql/queries';
 import NewMovieModalForm from '@/components/NewMovieModalForm/NewMovieModalForm';
 import {INewMovie} from '@/interfaces';
-import {signal} from '@preact/signals-react';
 
 export const isCreateSig = signal<boolean>(true);
 
@@ -26,6 +26,7 @@ function Home() {
     const [addSnackOpen, setAddSnackOpen] = useState<boolean>(false);
     const [deleteSnackOpen, setDeleteSnackOpen] = useState<boolean>(false);
     const [newMovieFromForm, setNewMovieFromForm] = useState<INewMovie | null>(null);
+    const [movieForForm, setMovieForForm] = useState<INewMovie | null>(null);
 
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
@@ -60,8 +61,13 @@ function Home() {
         onOpen();
     };
 
-    const updateMovie = () => {
+    const updateMovie = (movie: INewMovie) => {
         isCreateSig.value = false;
+        setMovieForForm({
+            id: movie.id,
+            title: movie.title,
+            description: movie.description,
+        });
         onOpen();
     };
 
@@ -118,7 +124,7 @@ function Home() {
                                 className="justify-end gap-5 before:bg-white/10 border-white/20 border-1 overflow-hidden py-1 absolute before:rounded-xl rounded-large bottom-1 w-[calc(100%_-_8px)] shadow-small ml-1 z-10">
                                 <Button className="text-tiny text-white bg-black/20" variant="flat" color="default"
                                         radius="lg"
-                                        size="sm" onClick={updateMovie}>
+                                        size="sm" onClick={() => updateMovie(movie as INewMovie)}>
                                     Edit
                                 </Button>
                                 <Button className="text-tiny text-white bg-black/20" variant="flat" color="default"
@@ -137,7 +143,8 @@ function Home() {
                 </div>
 
                 <NewMovieModalForm isOpen={isOpen} onOpenChange={onOpenChange}
-                                   setNewMovieFromForm={setNewMovieFromForm}/>
+                                   setNewMovieFromForm={setNewMovieFromForm}
+                                   movieForForm={movieForForm}/>
 
                 <Snackbar
                     open={addSnackOpen}
