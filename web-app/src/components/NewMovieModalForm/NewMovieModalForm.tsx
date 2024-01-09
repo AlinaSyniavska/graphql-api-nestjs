@@ -1,4 +1,10 @@
-import React, {Dispatch, FC, SetStateAction, useEffect, useState} from 'react';
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Button,
   Input,
@@ -25,15 +31,19 @@ const NewMovieModalForm: FC<IProps> = ({
   setNewMovieFromForm,
   movieForForm,
 }) => {
-  const [titleValue, setTitleValue] = useState<string>(movieForForm?.title || '');
-  const [descriptionValue, setDescriptionValue] = useState<string>(movieForForm?.description || '');
+  const [titleValue, setTitleValue] = useState<string>(
+    movieForForm?.title || '',
+  );
+  const [descriptionValue, setDescriptionValue] = useState<string>(
+    movieForForm?.description || '',
+  );
 
   useEffect(() => {
-    if(movieForForm?.title) {
-      setTitleValue(movieForForm.title)
+    if (movieForForm?.title) {
+      setTitleValue(movieForForm.title);
     }
-    if(movieForForm?.description) {
-      setDescriptionValue(movieForForm.description)
+    if (movieForForm?.description) {
+      setDescriptionValue(movieForForm.description);
     }
   }, [movieForForm]);
 
@@ -93,12 +103,11 @@ const NewMovieModalForm: FC<IProps> = ({
                       title: titleValue,
                       description: descriptionValue,
                     });
-
                     onClose();
                   }}
                   isDisabled={isInvalid}
                 >
-                  Add
+                  {isCreateSig.value ? 'Add' : 'Edit'}
                 </Button>
               </ModalFooter>
             </>

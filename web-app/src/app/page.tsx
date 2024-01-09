@@ -32,17 +32,25 @@ function Home() {
 
     useEffect(() => {
         if (newMovieFromForm) {
-            createMovieMutation({
-                variables: {
-                    movie: {
-                        title: newMovieFromForm.title,
-                        description: newMovieFromForm.description,
-                    },
-                },
-                refetchQueries: [{query: MOVIES_QUERY}],
-            }).then(value => console.log(value));
 
-            setAddSnackOpen(true);
+
+            if (isCreateSig.value) {
+                createMovieMutation({
+                    variables: {
+                        movie: {
+                            title: newMovieFromForm.title,
+                            description: newMovieFromForm.description,
+                        },
+                    },
+                    refetchQueries: [{query: MOVIES_QUERY}],
+                }).then(value => console.log(value));
+
+                setAddSnackOpen(true);
+            } else {
+                console.log(newMovieFromForm)
+            }
+
+
         }
     }, [newMovieFromForm, createMovieMutation]);
 
