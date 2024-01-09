@@ -9,14 +9,12 @@ import { MovieCommentModule } from './movie-comment/movie-comment.module';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      // GraphQLModule.forRoot({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      // cors: {
-      // origin: ['http://localhost:3000/'],
-      // origin: '*',
-      // credentials: true,
-      // },
+      subscriptions: {
+        "graphql-ws": true,
+        'subscriptions-transport-ws': true,
+      },
     }),
     MovieModule,
     UserModule,
