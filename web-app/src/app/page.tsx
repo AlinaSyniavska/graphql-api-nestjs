@@ -13,6 +13,7 @@ import {
   useCreateMovieMutation,
   useDeleteMovieMutation,
   useGetAllMoviesQuery,
+  useMovieAddedSubscription,
   useUpdateMovieMutation,
 } from '../../generated';
 import { MOVIES_QUERY } from '../../graphql/queries';
@@ -24,17 +25,14 @@ export const isCreateSig = signal<boolean>(true);
 function Home() {
   const { data, loading, error } = useGetAllMoviesQuery();
   const [createMovieMutation, { data: newMovie }] = useCreateMovieMutation();
-  const [deleteMovieMutation, { data: deletedMovie }] =
-    useDeleteMovieMutation();
-  const [updateMovieMutation, { data: updatedMovie }] =
-    useUpdateMovieMutation();
+  const [deleteMovieMutation, { data: deletedMovie }] = useDeleteMovieMutation();
+  const [updateMovieMutation, { data: updatedMovie }] = useUpdateMovieMutation();
+  const { data: addedMovie } = useMovieAddedSubscription();
 
   const [addSnackOpen, setAddSnackOpen] = useState<boolean>(false);
   const [deleteSnackOpen, setDeleteSnackOpen] = useState<boolean>(false);
   const [updateSnackOpen, setUpdateSnackOpen] = useState<boolean>(false);
-  const [newMovieFromForm, setNewMovieFromForm] = useState<INewMovie | null>(
-    null,
-  );
+  const [newMovieFromForm, setNewMovieFromForm] = useState<INewMovie | null>(null);
   const [movieForForm, setMovieForForm] = useState<INewMovie | null>(null);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -112,26 +110,17 @@ function Home() {
     setDeleteSnackOpen(true);
   };
 
-  const handleAddSnackClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
+  const handleAddSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') return;
     setAddSnackOpen(false);
   };
 
-  const handleDeleteSnackClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
+  const handleDeleteSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') return;
     setDeleteSnackOpen(false);
   };
 
-  const handleUpdateSnackClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: string,
-  ) => {
+  const handleUpdateSnackClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') return;
     setUpdateSnackOpen(false);
   };
@@ -204,10 +193,7 @@ function Home() {
           onClose={handleAddSnackClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="success" sx={{ width: '100%' }}>
-            {' '}
-            Movie {newMovie?.createMovie.title} is successfully added!{' '}
-          </Alert>
+          <Alert severity="success" sx={{ width: '100%' }}>Movie {newMovie?.createMovie.title} is successfully added!</Alert>
         </Snackbar>
 
         <Snackbar
@@ -216,10 +202,7 @@ function Home() {
           onClose={handleDeleteSnackClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="warning" sx={{ width: '100%' }}>
-            {' '}
-            Movie {deletedMovie?.deleteMovie.title} is successfully deleted!{' '}
-          </Alert>
+          <Alert severity="warning" sx={{ width: '100%' }}>Movie {deletedMovie?.deleteMovie.title} is successfully deleted!</Alert>
         </Snackbar>
 
         <Snackbar
@@ -228,10 +211,7 @@ function Home() {
           onClose={handleUpdateSnackClose}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
-          <Alert severity="success" sx={{ width: '100%' }}>
-            {' '}
-            Movie {updatedMovie?.updateMovie.title} is successfully updated!{' '}
-          </Alert>
+          <Alert severity="success" sx={{ width: '100%' }}>Movie {updatedMovie?.updateMovie.title} is successfully updated!</Alert>
         </Snackbar>
       </main>
     </NextUIProvider>
