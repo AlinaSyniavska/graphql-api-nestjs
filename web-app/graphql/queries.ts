@@ -100,3 +100,14 @@ export const UPDATE_MOVIE = gql`
     }
 `;
 
+const MOVIE_ADDED = gql`
+  subscription movieAdded {
+    movieAddedSubscription{
+        id
+        title
+        createdAt
+    }
+  }
+`;
+
+
