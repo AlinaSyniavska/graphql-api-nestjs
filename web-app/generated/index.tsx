@@ -115,6 +115,11 @@ export type QueryGetUserByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  movieAddedSubscription: Movie;
+};
+
 /** User model */
 export type User = {
   __typename?: 'User';
@@ -158,6 +163,11 @@ export type UpdateMovieMutationVariables = Exact<{
 
 
 export type UpdateMovieMutation = { __typename?: 'Mutation', updateMovie: { __typename?: 'Movie', id: number, title: string, description?: string | null, createdAt: string, updatedAt: string } };
+
+export type MovieAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MovieAddedSubscription = { __typename?: 'Subscription', movieAddedSubscription: { __typename?: 'Movie', id: number, title: string, createdAt: string } };
 
 
 export const GetAllMoviesDocument = gql`
@@ -353,3 +363,34 @@ export function useUpdateMovieMutation(baseOptions?: Apollo.MutationHookOptions<
 export type UpdateMovieMutationHookResult = ReturnType<typeof useUpdateMovieMutation>;
 export type UpdateMovieMutationResult = Apollo.MutationResult<UpdateMovieMutation>;
 export type UpdateMovieMutationOptions = Apollo.BaseMutationOptions<UpdateMovieMutation, UpdateMovieMutationVariables>;
+export const MovieAddedDocument = gql`
+    subscription movieAdded {
+  movieAddedSubscription {
+    id
+    title
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useMovieAddedSubscription__
+ *
+ * To run a query within a React component, call `useMovieAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useMovieAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMovieAddedSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMovieAddedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<MovieAddedSubscription, MovieAddedSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<MovieAddedSubscription, MovieAddedSubscriptionVariables>(MovieAddedDocument, options);
+      }
+export type MovieAddedSubscriptionHookResult = ReturnType<typeof useMovieAddedSubscription>;
+export type MovieAddedSubscriptionResult = Apollo.SubscriptionResult<MovieAddedSubscription>;
