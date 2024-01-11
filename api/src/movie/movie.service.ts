@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Movie } from '@prisma/client';
 
@@ -54,10 +54,14 @@ export class MovieService {
   }
 
   async deleteMovie(movieId: number): Promise<Movie> {
-    return this.prisma.movie.delete({
-      where: {
-        id: movieId,
-      },
-    });
+    return this.prisma.movie
+      .delete({
+        where: {
+          id: movieId,
+        },
+      })
+      .catch(() => {
+        throw new NotFoundException(`Can't find item with id ${movieId}`);
+      });
   }
 }
