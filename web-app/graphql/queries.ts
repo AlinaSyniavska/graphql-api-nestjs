@@ -48,10 +48,10 @@ export const CHARACTER_QUERY = gql`
 export const MOVIES_QUERY = gql`
   query getAllMovies {
     getAllMovies {
-        id
-        title
-        description
-      }
+      id
+      title
+      description
+    }
   }
 `;
 
@@ -72,11 +72,11 @@ export const SINGLE_MOVIE_QUERY = gql`
 
 export const CREATE_MOVIE = gql`
   mutation createMovie($movie: MovieInputCreate!) {
-      createMovie(movieInputCreate: $movie) {
-        title
-        description
-      }
+    createMovie(movieInputCreate: $movie) {
+      title
+      description
     }
+  }
 `;
 
 export const DELETE_MOVIE = gql`
@@ -89,25 +89,32 @@ export const DELETE_MOVIE = gql`
 `;
 
 export const UPDATE_MOVIE = gql`
-    mutation updateMovie($movie: MovieInputEdit!) {
-        updateMovie(movieInputEdit: $movie) {
-            id
-            title
-            description
-            createdAt
-            updatedAt
-        }
-    }
-`;
-
-const MOVIE_ADDED = gql`
-  subscription movieAdded {
-    movieAddedSubscription{
-        id
-        title
-        createdAt
+  mutation updateMovie($movie: MovieInputEdit!) {
+    updateMovie(movieInputEdit: $movie) {
+      id
+      title
+      description
+      createdAt
+      updatedAt
     }
   }
 `;
 
+const MOVIE_ADDED = gql`
+  subscription movieAdded {
+    movieAddedSubscription {
+      id
+      title
+      createdAt
+    }
+  }
+`;
 
+const MOVIE_DELETED = gql`
+  subscription movieDeleted {
+    movieDeletedSubscription {
+      id
+      title
+    }
+  }
+`;
