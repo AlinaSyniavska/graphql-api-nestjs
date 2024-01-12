@@ -20,8 +20,8 @@ export class AuthUserService {
         },
       })
       .catch((error) => {
-        if (error.code === '23505') {
-          throw new ConflictException(`Username ${newUser.username} already exist.`);
+        if (error.code === '23505' || error.code === 'P2002') {
+          throw new ConflictException(`Username ${username} already exist.`);
         } else {
           throw new BadRequestException();
         }
