@@ -29,4 +29,12 @@ export class AuthUserService {
 
     return { username: newUser.username };
   }
+
+  async getUser(username: string): Promise<AuthUser> {
+    return this.prisma.authUser.findFirstOrThrow({
+      where: {
+        username,
+      }
+    })
+  }
 }
