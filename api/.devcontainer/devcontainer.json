@@ -1,4 +1,0 @@
-{
-  "name": "graphql-api-dev-container",
-  "image": "ubuntu:latest",
-}
