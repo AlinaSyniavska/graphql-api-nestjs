@@ -17,7 +17,10 @@ import { MovieComment } from '../movie-comment/movie-comment.model';
 import { Inject } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
 
-const MOVIE_ADDED_EVENT = 'movieAdded';
+const movieEvents = {
+  MOVIE_ADDED: 'movieAdded',
+  MOVIE_DELETED: 'movieDeleted',
+};
 
 @Resolver(() => Movie)
 export class MovieResolver {
@@ -46,7 +49,7 @@ export class MovieResolver {
     // return this.movieService.createMovie(movieInputCreate);
 
     const newMovie = this.movieService.createMovie(movieInputCreate);
-    await this.pubSub.publish(MOVIE_ADDED_EVENT, {
+    await this.pubSub.publish(movieEvents.MOVIE_ADDED, {
       movieAddedSubscription: newMovie,
     });
 
@@ -64,7 +67,12 @@ export class MovieResolver {
   async deleteMovie(
     @Args('id', { type: () => Int }) id: number,
   ): Promise<Movie> {
-    return this.movieService.deleteMovie(id);
+    // return this.movieService.deleteMovie(id);
+    const movie = this.movieService.deleteMovie(id);
+    await this.pubSub.publish(movieEvents.MOVIE_DELETED, {
+      movieDeletedSubscription: movie,
+    });
+    return movie;
   }
 
   @ResolveField('movieComment', () => [MovieComment])
@@ -77,6 +85,14 @@ export class MovieResolver {
     name: 'movieAddedSubscription',
   })
   movieAdded() {
-    return this.pubSub.asyncIterator(MOVIE_ADDED_EVENT);
+    return this.pubSub.asyncIterator(movieEvents.MOVIE_ADDED);
+  }
+
+  @Subscription(() => Movie, {
+    name: 'movieDeletedSubscription',
+    description: 'Subscription for movie deleting',
+  })
+  movieDeleted() {
+    return this.pubSub.asyncIterator(movieEvents.MOVIE_DELETED);
   }
 }

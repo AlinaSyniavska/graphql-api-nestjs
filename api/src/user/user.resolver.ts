@@ -31,6 +31,8 @@ export class UserResolver {
     return this.userService.getUserById(id);
   }
 
+
+
   @ResolveField('movieCommentsUserLeft', () => [MovieComment])
   async getMovieCommentsThatUserWritten(
     @Parent() user: User,
