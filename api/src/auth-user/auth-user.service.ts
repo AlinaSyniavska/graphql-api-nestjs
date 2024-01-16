@@ -1,4 +1,8 @@
-import {BadRequestException, ConflictException, Injectable} from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 
 import { AuthUserInput } from './auth-user.input';
 import { ISignupResponse } from './interfaces';
@@ -34,7 +38,7 @@ export class AuthUserService {
     return this.prisma.authUser.findFirstOrThrow({
       where: {
         username,
-      }
-    })
+      },
+    });
   }
 }
