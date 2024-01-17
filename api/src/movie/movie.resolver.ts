@@ -16,7 +16,7 @@ import { MovieCommentService } from '../movie-comment/movie-comment.service';
 import { MovieComment } from '../movie-comment/movie-comment.model';
 import { Inject, UseGuards } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
-import { JwtStrategy } from '../auth/strategy';
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 const movieEvents = {
   MOVIE_ADDED: 'movieAdded',
@@ -32,7 +32,7 @@ export class MovieResolver {
   ) {}
 
   @Query(() => [Movie])
-  @UseGuards(JwtStrategy)
+  @UseGuards(JwtAuthGuard)
   async getAllMovies(): Promise<Movie[]> {
     return this.movieService.getAllMovies();
   }
