@@ -32,10 +32,10 @@ import { JwtStrategy, LocalStrategy } from './strategy';
     LocalStrategy,
     JwtStrategy,
   ],
-/*  exports: [
-    JwtModule,
-    PassportModule,
-    AuthService,
-  ],*/
+  exports: [
+    // JwtModule,
+    // PassportModule,
+    // AuthService,
+  ],
 })
 export class AuthModule {}

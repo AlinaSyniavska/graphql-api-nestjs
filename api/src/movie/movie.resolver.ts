@@ -24,6 +24,7 @@ const movieEvents = {
 };
 
 @Resolver(() => Movie)
+@UseGuards(JwtAuthGuard)
 export class MovieResolver {
   constructor(
     private movieService: MovieService,
@@ -32,7 +33,6 @@ export class MovieResolver {
   ) {}
 
   @Query(() => [Movie])
-  @UseGuards(JwtAuthGuard)
   async getAllMovies(): Promise<Movie[]> {
     return this.movieService.getAllMovies();
   }

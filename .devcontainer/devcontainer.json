@@ -1,8 +1,12 @@
 {
   "image": "mcr.microsoft.com/devcontainers/typescript-node:latest",
   "name": "graphql-api-dev-container",
-  "build": {
+  /*"build": {
     "dockerfile": "Dockerfile"
+  },*/
+  "containerEnv": {
+    "DATABASE_URL": "postgresql://postgres:superuser@localhost:5432/graphql-movies-db?schema=public",
+    "JWT_SECRET": "someSecretJwtKey"
   },
   "forwardPorts": [
     5000
