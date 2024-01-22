@@ -7,8 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-  url      = "postgresql://postgres:superuser@localhost:5432/graphql-movies-db?schema=public"
+  url      = env("DATABASE_URL")
 }
 
 model Movie {

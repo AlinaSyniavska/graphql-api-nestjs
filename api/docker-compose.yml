@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  graphql-web-api:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      # Only will build development stage from our dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    # Run a command against the development stage of the image
+    command: npm run start:dev
+    ports:
+      - 5000:80
+    container_name: web-api
+    restart: on-failure
