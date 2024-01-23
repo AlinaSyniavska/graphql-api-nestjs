@@ -14,8 +14,9 @@ import { Movie } from './movie.model';
 import { MovieService } from './movie.service';
 import { MovieCommentService } from '../movie-comment/movie-comment.service';
 import { MovieComment } from '../movie-comment/movie-comment.model';
-import { Inject } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 const movieEvents = {
   MOVIE_ADDED: 'movieAdded',
@@ -23,6 +24,7 @@ const movieEvents = {
 };
 
 @Resolver(() => Movie)
+// @UseGuards(JwtAuthGuard)
 export class MovieResolver {
   constructor(
     private movieService: MovieService,
