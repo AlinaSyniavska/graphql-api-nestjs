@@ -24,7 +24,7 @@ const movieEvents = {
 };
 
 @Resolver(() => Movie)
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class MovieResolver {
   constructor(
     private movieService: MovieService,

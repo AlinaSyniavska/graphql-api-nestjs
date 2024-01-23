@@ -12,6 +12,8 @@ WORKDIR /usr/src/app
 # Copying this first prevents re-running npm install on every code change.
 COPY --chown=node:node package*.json ./
 
+COPY prisma ./prisma/
+
 # Install app dependencies using the `npm ci` command instead of `npm install`
 RUN npm ci
 
@@ -19,6 +21,7 @@ RUN npm ci
 COPY --chown=node:node . .
 
 RUN npx prisma generate
+#RUN npx prisma migrate dev --name base-setup  init
 
 # Use the node user from the image (instead of the root user)
 USER node
