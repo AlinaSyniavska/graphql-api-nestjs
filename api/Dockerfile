@@ -11,15 +11,14 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
 # Copying this first prevents re-running npm install on every code change.
 COPY --chown=node:node package*.json ./
-#COPY package*.json ./
 
 # Install app dependencies using the `npm ci` command instead of `npm install`
 RUN npm ci
-#RUN npm rebuild bcrypt
-#RUN npm install --silent
 
 # Bundle app source
 COPY --chown=node:node . .
+
+RUN npx prisma generate
 
 # Use the node user from the image (instead of the root user)
 USER node
