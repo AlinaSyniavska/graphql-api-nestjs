@@ -3,7 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 import { AuthUserInput } from '../auth-user/auth-user.input';
 import { AuthUserService } from '../auth-user/auth-user.service';
