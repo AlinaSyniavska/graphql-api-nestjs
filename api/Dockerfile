@@ -2,7 +2,7 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:18-alpine3.16 As development
+FROM node:18-alpine3.17 As development
 
 WORKDIR /app
 COPY package*.json .
