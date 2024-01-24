@@ -2,34 +2,34 @@ version: '3.8'
 
 services:
   graphql-web-api:
+    container_name: web-api
     build:
+      context: ./api
       dockerfile: Dockerfile
-      context: .
+      args:
+        ENV_FILE: .env
       # Only will build development stage from our dockerfile
       target: development
-    volumes:
-      - .:/usr/src/app
-#      - .:/usr/src/app/node_modules
-    env_file:
-      - .env
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
-      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgresql://postgres:superuser@postgres:5432/graphql-movies-db?schema=public
+    volumes:
+      - ./api:/app
+#      - /app/node_modules
     # Run a command against the development stage of the image
     command: npm run start:dev
     ports:
       - 5000:5000
-    container_name: web-api
     restart: on-failure
     depends_on:
       - postgres
+
   postgres:
     image: postgres
     restart: always
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: graphql-movies-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: superuser
     ports:
       - '5432:5432'
     volumes:

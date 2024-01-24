@@ -2,26 +2,17 @@
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
 
-FROM node:18-alpine As development
+FROM node:18-alpine3.16 As development
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
+COPY package*.json .
 
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
-# Copying this first prevents re-running npm install on every code change.
-COPY --chown=node:node package*.json ./
-
-COPY prisma ./prisma/
-
-# Install app dependencies using the `npm ci` command instead of `npm install`
-RUN npm ci
-
-# Bundle app source
-COPY --chown=node:node . .
+RUN apk add openssl3
+RUN npm install
 
 RUN npx prisma generate
-#RUN npx prisma migrate dev --name base-setup  init
+
+COPY . .
 
 # Use the node user from the image (instead of the root user)
 USER node
