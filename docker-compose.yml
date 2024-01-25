@@ -40,16 +40,35 @@ services:
     ports:
       - 3000:3000
 
+#  postgres:
+#    image: postgres
+#    restart: always
+#    environment:
+#      POSTGRES_DB: graphql-movies-db
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: superuser
+#    ports:
+#      - '5432:5432'
+#    volumes:
+#      - docker-nest-postgres:/var/lib/postgresql/data
+#volumes:
+#  docker-nest-postgres:
+
   postgres:
+    container_name: container-postgres
     image: postgres
-    restart: always
+#    hostname: localhost
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_DB: graphql-movies-db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: superuser
-    ports:
-      - '5432:5432'
+      DATABASE_URL: postgresql://postgres:superuser@postgres:5432/graphql-movies-db?schema=public
     volumes:
-      - docker-nest-postgres:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+      - d:/backup_folder/db-backup.sq:/docker-entrypoint-initdb.d
+    restart: always
+
 volumes:
-  docker-nest-postgres:
+  postgres-data:

@@ -10,6 +10,8 @@ COPY package*.json .
 RUN apk add openssl3
 RUN npm install
 
+COPY prisma ./prisma/
+
 RUN npx prisma generate
 
 COPY . .
